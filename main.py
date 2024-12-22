@@ -1,7 +1,7 @@
 """
 Stock market data viewer
 """
-from finance import Stock
+from src.financelib.stock import Stock
 
 def main() -> None:
     # Test stock search and display
