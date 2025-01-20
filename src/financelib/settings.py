@@ -27,3 +27,6 @@ def news_api_setup(api_key: str = None, api_key_from_dotenv: bool = True, dotenv
 # This settings is for my pc. Please set this for your own pc.
 if __name__ == "__main__":
   news_api_setup(api_key_from_dotenv=True, dotenv_path='.env.local')
+
+NEWS_TITLE_CHAR_LIMIT = 10
+NEWS_CONTENT_CHAR_LIMIT = 150

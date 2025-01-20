@@ -7,9 +7,10 @@ from bs4 import BeautifulSoup
 from typing import List, Dict
 import time, os
 
-NEWS_TITLE_CHAR_LIMIT = 10
-NEWS_CONTENT_CHAR_LIMIT = 150
-
+from financelib.settings import (
+  NEWS_TITLE_CHAR_LIMIT,
+  NEWS_CONTENT_CHAR_LIMIT
+)
 class News:
   title: str
   content: str
