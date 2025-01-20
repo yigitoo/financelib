@@ -287,8 +287,5 @@ class NewsAPIQuery(BaseQueryClass):
 
 
 if __name__ == '__main__':
-  api_key = input('NewsAPI api key: ')
-
-#  newsquery = NewsAPIQuery(api_key=api_key)
   newsquery = NewsAPIQuery(api_key_from_dotenv=True)
   newsquery.search_articles('Apple', sources_from_ids=['bloomberg', 'bbc-news', 'cnn'], print_results=True)
