@@ -1,6 +1,6 @@
 # 📈 FinanceLib
 
-[![Python Version](https://img.shields.io/badge/python-3.7%2B-blue.svg)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Simple and efficient library for tracking BIST (Borsa Istanbul) stocks with real-time data and search capabilities.
@@ -95,7 +95,7 @@ python -m unittest tests.test_stock
 
 ## 📝 Requirements
 
-- Python 3.7 or higher
+- Python 3.9 or higher (Python 3.10+ is recommended)
 - Dependencies:
   - yfinance >= 0.2.36
   - pandas >= 1.5.0
@@ -119,11 +119,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) f
 
 - Data provided by Yahoo Finance
 - Inspired by various financial libraries
+- Used FinViz API for stock search
 - Thanks to all contributors
 
 ## 📬 Contact
 
-Your Name - [@yigitgumus_](https://twitter.com/yigitgumus_)
+Yiğit GÜMÜŞ - [@yigitgumus_](https://twitter.com/yigitgumus_)
 
 Project Link: [https://github.com/yigitgumus/financelib](https://github.com/yigitgumus/financelib)
 
