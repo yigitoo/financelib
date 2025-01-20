@@ -237,19 +237,6 @@ class BloombergQuery(BaseQueryClass):
             return []
 
 class NewsAPIQuery(BaseQueryClass):
-  def __init__(self, api_key: str = None, api_key_from_dotenv: bool = True, dotenv_path: str = "") -> None:
-    if not api_key and api_key_from_dotenv:
-      import dotenv
-
-      if dotenv_path == "":
-        dotenv.load_dotenv()
-
-      else:
-        dotenv.load_dotenv(dotenv_path)
-
-      self.newsapi = NewsApiClient(api_key=os.getenv('NEWS_API_APIKEY'))
-    else:
-       self.newsapi = NewsApiClient(api_key=api_key)
   def search_articles(self, query, sources_from_ids: str | List[str], limit: int = 5,
                       print_results: bool = False) -> List[News]:
 
