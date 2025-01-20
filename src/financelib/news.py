@@ -1,10 +1,11 @@
 import datetime
 import requests
 
+from newsapi import NewsApiClient
 
 from bs4 import BeautifulSoup
 from typing import List, Dict
-import time
+import time, os
 
 NEWS_TITLE_CHAR_LIMIT = 10
 NEWS_CONTENT_CHAR_LIMIT = 150
@@ -92,7 +93,23 @@ class News:
 
     self._author = author_name
 
-class BloombergQuery:
+class BaseQueryClass:
+    BASE_URL: str
+    SEARCH_URL: str
+    session: requests.Session
+    headers: Dict[str, str] = {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5',
+      'Referer': 'https://www.bloomberg.com',
+      'DNT': '1'
+    }
+
+    def search_articles(self, query: str, limit: int = 5, print_results: bool = False) -> List[News]:
+        raise NotImplementedError("Please implement this method in your subclass")
+
+
+class BloombergQuery(BaseQueryClass):
     BASE_URL = "https://www.bloomberg.com"
     SEARCH_URL = f"{BASE_URL}/search"
 
@@ -202,16 +219,16 @@ class BloombergQuery:
 
             if print_results:
               for article in articles:
-                  print("-----------------------------------")
-                  print("Title:", article.title)
-                  print("-----------------------------------")
-                  print(article.content)
-                  print("-----------------------------------")
-                  print("Category:", article.category)
-                  print("Date of Upload:", article.date)
-                  print("Author:", article.author)
-                  print("-----------------------------------")
-                  print()
+                print("-----------------------------------")
+                print("Title:", article.title)
+                print("-----------------------------------")
+                print(article.content)
+                print("-----------------------------------")
+                print("Category:", article.category)
+                print("Date of Upload:", article.date)
+                print("Author:", article.author)
+                print("-----------------------------------")
+                print()
 
             return articles
 
@@ -219,6 +236,59 @@ class BloombergQuery:
             print(f"Error fetching articles: {str(e)}")
             return []
 
-if __name__ == "__main__":
-    crawler = BloombergQuery()
-    articles = crawler.search_articles("Tesla stock", print_results = True)
+class NewsAPIQuery(BaseQueryClass):
+  def __init__(self, api_key: str = None, api_key_from_dotenv: bool = True, dotenv_path: str = "") -> None:
+    if not api_key and api_key_from_dotenv:
+      import dotenv
+
+      if dotenv_path == "":
+        dotenv.load_dotenv()
+
+      else:
+        dotenv.load_dotenv(dotenv_path)
+
+      self.newsapi = NewsApiClient(api_key=os.getenv('NEWS_API_APIKEY'))
+    else:
+       self.newsapi = NewsApiClient(api_key=api_key)
+  def search_articles(self, query, sources_from_ids: str | List[str], limit: int = 5,
+                      print_results: bool = False) -> List[News]:
+
+    if sources_from_ids is not None and type(sources_from_ids) is list:
+       sources=','.join(sources_from_ids)
+
+    all_articles = self.newsapi.get_everything(
+      q=query,
+      sources=sources,
+    )
+
+    if print_results:
+      for article in all_articles['articles']:
+        print("-----------------------------------")
+        print("Title:", article['title'])
+        print("-----------------------------------")
+        print("Article Thumbnail:", article['urlToImage'])
+        print('---')
+        print(article['content'])
+        print("-----------------------------------")
+        print("Source:", article['source']['name'])
+        print("Date of Publish:", article['publishedAt'])
+        print("Article URL:", article['url'])
+        print("-----------------------------------")
+        print()
+
+    return all_articles['articles']
+  def get_all_news_source_ids(self) -> List[str]:
+    sources = self.newsapi.get_sources()
+    return [source['id'] for source in sources['sources']]
+
+  def get_all_news_sources_datailed(self) -> List[Dict[str, str]]:
+    sources = self.newsapi.get_sources()
+    return sources['sources']
+
+
+if __name__ == '__main__':
+  api_key = input('NewsAPI api key: ')
+
+#  newsquery = NewsAPIQuery(api_key=api_key)
+  newsquery = NewsAPIQuery(api_key_from_dotenv=True)
+  newsquery.search_articles('Apple', sources_from_ids=['bloomberg', 'bbc-news', 'cnn'], print_results=True)

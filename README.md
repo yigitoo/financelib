@@ -12,17 +12,24 @@ Simple and efficient library for tracking BIST (Borsa Istanbul) stocks with real
 - 📊 **Rich Display**: Colored output for price changes
 - 📈 **Market Data**: Track volume and price movements
 - 🇹🇷 **BIST Focus**: Specialized for Turkish stock market
+- 📰 **Data Crawler and News API**: News/Article API (100 query per day) and some news sites crawlers.
 
 ## 🛠️ Installation
 
 ```bash
 # Using pip
-pip install financelib
+$ pip install financelib
 
 # From source
-git clone https://github.com/yourusername/financelib.git
-cd financelib
-pip install -e .
+$ git clone https://github.com/yourusername/financelib.git
+$ cd financelib
+$ pip install -e .
+
+# and set api key
+# Goto https://newsapi.org/ and get your api key
+# And set this api key with that name if you want to use NewsAPI
+$ export NEWS_API_APIKEY="your-api-key"
+
 ```
 
 ## 📖 Usage
