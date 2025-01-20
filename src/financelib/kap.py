@@ -17,70 +17,63 @@ class KAP:
   def download_pdfs_via_date_ranges(
       self, date_from = today, date_to = today, desired_path = ""):
 
-    try:
-      desired_path = desired_path + '/' if desired_path[-1] != '/' and desired_path != '' else desired_path
-      randint = random.randint(10000000000, 99999999999)  # Random integer for the API URL
-      api = f'https://www.kap.org.tr/tr/api/disclosures?ts={randint}&fromDate={date_from}&toDate={date_to}'  # API URL
-      r = requests.get(api).json()  # Index should be adjusted according to the desired API URL
+    desired_path = desired_path + '/' if desired_path[-1] != '/' and desired_path != '' else desired_path
+    randint = random.randint(10000000000, 99999999999)  # Random integer for the API URL
+    api = f'https://www.kap.org.tr/tr/api/disclosures?ts={randint}&fromDate={date_from}&toDate={date_to}'  # API URL
+    r = requests.get(api).json()  # Index should be adjusted according to the desired API URL
 
-      # Extract necessary data from JSON
-      basic = [item["basic"] for item in r]
-      disclosure_indexes = [item["disclosureIndex"] for item in basic]
-      company_codes = [item["stockCodes"] for item in basic]
-      titles = [item["title"] for item in basic]
+    # Extract necessary data from JSON
+    basic = [item["basic"] for item in r]
+    disclosure_indexes = [item["disclosureIndex"] for item in basic]
+    company_codes = [item["stockCodes"] for item in basic]
+    titles = [item["title"] for item in basic]
 
-      # Create PDF URLs and download PDFs
-      if not os.path.exists(desired_path):
-        os.mkdir(desired_path)
-        print(f"Directory {desired_path} created.")
+    # Create PDF URLs and download PDFs
+    if not os.path.exists(desired_path):
+      os.mkdir(desired_path)
+      print(f"Directory {desired_path} created.")
 
-      print("Downloading PDFs...")
+    print("Downloading PDFs...")
 
-      for i in range(0, len(basic)):
-        pdf_url = f"https://www.kap.org.tr/tr/BildirimPdf/{disclosure_indexes[i]}"
+    for i in range(0, len(basic)):
+      pdf_url = f"https://www.kap.org.tr/tr/BildirimPdf/{disclosure_indexes[i]}"
 
-        # Download the PDF file
-        response = requests.get(pdf_url)
-        if response.status_code == 200:
+      # Download the PDF file
+      response = requests.get(pdf_url)
+      if response.status_code == 200:
 
-          pdf_file_path = f"{desired_path}{company_codes[i]}-{titles[i].replace('/', '-')}-{disclosure_indexes[i]}.pdf"
+        pdf_file_path = f"{desired_path}{company_codes[i]}-{titles[i].replace('/', '-')}-{disclosure_indexes[i]}.pdf"
 
-          # Write it to a PDF file
-          with open(pdf_file_path, "wb") as pdf_file:
-            pdf_file.write(response.content)
+        # Write it to a PDF file
+        with open(pdf_file_path, "wb") as pdf_file:
+          pdf_file.write(response.content)
 
-          print(f"PDF downloaded and saved to {pdf_file_path}")
-        time.sleep(15)  # Wait for a while to avoid overloading the server
-    finally:
-      driver.quit()  # Close WebDriver
+        print(f"PDF downloaded and saved to {pdf_file_path}")
+      time.sleep(15)  # Wait for a while to avoid overloading the server
 
   def download_pdf_via_disclosure_no(self, disclosure_no: int, desired_path=''):
     """
       Download PDF files from the KAP website.
     """
 
-    try:
-      desired_path = desired_path + '/' if desired_path[-1] != '/' and desired_path != '' else desired_path
-      # Go to the page URL
-      driver.get("https://www.kap.org.tr/tr/")  # Page URL
-      time.sleep(5)  # Wait for the page to load
+    desired_path = desired_path + '/' if desired_path[-1] != '/' and desired_path != '' else desired_path
+    # Go to the page URL
+    time.sleep(5)  # Wait for the page to load
 
-      pdf_url = f"https://www.kap.org.tr/tr/BildirimPdf/{disclosure_no}"
+    pdf_url = f"https://www.kap.org.tr/tr/BildirimPdf/{disclosure_no}"
 
-      response = requests.get(pdf_url)
-      if response.status_code == 200:
-        # Create desktop path and file name to save the file
-        pdf_file_path = f"{desired_path}{disclosure_no}.pdf"
+    response = requests.get(pdf_url)
+    if response.status_code == 200:
+      # Create desktop path and file name to save the file
+      pdf_file_path = f"{desired_path}{disclosure_no}.pdf"
 
-        # Write the PDF file
-        with open(pdf_file_path, "wb") as pdf_file:
-          pdf_file.write(response.content)
+      # Write the PDF file
+      with open(pdf_file_path, "wb") as pdf_file:
+        pdf_file.write(response.content)
 
-        print(f"PDF downloaded and saved to {pdf_file_path}")
+      print(f"PDF downloaded and saved to {pdf_file_path}")
 
-        time.sleep(15)  # Wait to avoid overloading the server
-    finally:
-      driver.quit()  # Close WebDriver
+      time.sleep(15)  # Wait to avoid overloading the server
 
     print("All PDFs have been downloaded.")
 
