@@ -17,6 +17,9 @@ class News:
   date: str | datetime.date | datetime.datetime
   author: str | List[str]
   category: str = "news"
+  source: str = 'from god :)'
+  article_url: str = ""
+  article_thumbnail_url: str = ""
 
   def __init__(self, data: Dict[str, str] = {}) -> None:
     data =  {k.lower(): v for k, v in data.items()}
@@ -26,12 +29,18 @@ class News:
       self._date = ""
       self._author = ""
       self._category = "news"
+      self._source = "from god :)"
+      self._article_thumbnail_url = ""
+      self._article_url = ""
     else:
       self._title = data.get('title')
       self._content = data.get('content')
       self._date = data.get('date')
       self._author = data.get('author')
       self._category = data.get('category', 'news')
+      self._source = data.get('source', 'from god :)')
+      self._article_url = data.get('article_url', '')
+      self._article_thumbnail_url = data.get('article_thumbnail_url', '')
 
   @property
   def category(self) -> str:
@@ -93,6 +102,30 @@ class News:
        author_name = author_name.split(' and ')
 
     self._author = author_name
+
+  @property
+  def source(self) -> str:
+    return self._source
+
+  @source.setter
+  def source(self, source_name: str) -> None:
+    self._source = source_name
+
+  @property
+  def article_url(self) -> str:
+    return self._article_url
+
+  @article_url.setter
+  def article_url(self, url: str) -> None:
+    self._article_url = url
+
+  @property
+  def article_thumbnail_url(self) -> str:
+    return self._article_thumbnail_url
+
+  @article_thumbnail_url.setter
+  def article_thumbnail_url(self, url: str) -> None:
+    self._article_thumbnail_url = url
 
 class BaseQueryClass:
     BASE_URL: str

@@ -1,5 +1,5 @@
 """
-FinanceLib - Simple finance library for stock market data
+FinanceLib - Simple finance library for financial analysis and research.
 
 """
 import financelib.settings as settings
