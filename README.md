@@ -104,10 +104,13 @@ python -m unittest tests.test_stock
 
 - Python 3.9 or higher (Python 3.10+ is recommended)
 - Dependencies:
-  - yfinance >= 0.2.36
-  - pandas >= 1.5.0
-  - requests >= 2.31.0
-
+  - yfinance>=0.2.36
+  - pandas>=1.5.0
+  - requests>=2.31.0
+  - beautifulsoup4>=4.12.0
+  - newsapi-python
+  - python-dotenv
+  - SQLAlchemy
 ## 🤝 Contributing
 
 Contributions are welcome! Here's how you can help:
