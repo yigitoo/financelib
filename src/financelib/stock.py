@@ -47,6 +47,8 @@ class Stock:
         """Search for stocks"""
         results = cls.search_symbol(query)
 
+        # If return_data is True, return the results
+        # Else print the results
         if return_data:
             return results
 
