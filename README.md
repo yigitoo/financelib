@@ -78,13 +78,8 @@ Volume: 24,532,100
 
 ## 📊 Supported Stocks
 
-Currently supports major BIST stocks including:
-- Türk Hava Yolları (THYAO)
-- Garanti BBVA (GARAN)
-- ASELSAN (ASELS)
-- SASA Polyester (SASA)
-- Koç Holding (KCHOL)
-- And many more...
+Currently supported BIST, NASDAQ and NYSE stocks.
+But in the future I/we should add other countries stock markets too.
 
 ## 🔧 Configuration
 
