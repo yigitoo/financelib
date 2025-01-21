@@ -3,8 +3,6 @@ Simple finance library for stock market data
 """
 import yfinance as yf
 from typing import Dict, Any, Optional, List
-import pandas as pd
-import requests
 import logging
 from datetime import datetime
 
@@ -64,6 +62,7 @@ class Stock:
     @classmethod
     def get_all_stocks(cls) -> Dict[str, str]:
         """Get all predefined BIST stocks"""
+
         return cls.COMMON_STOCKS
 
     @classmethod

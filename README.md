@@ -106,6 +106,7 @@ python -m unittest tests.test_stock
   - newsapi-python
   - python-dotenv
   - SQLAlchemy
+  - investpy
 ## 🤝 Contributing
 
 Contributions are welcome! Here's how you can help:
