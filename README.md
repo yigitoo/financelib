@@ -21,7 +21,7 @@ Simple and efficient library for tracking BIST (Borsa Istanbul) stocks with real
 $ pip install financelib
 
 # From source
-$ git clone https://github.com/yourusername/financelib.git
+$ git clone https://github.com/yigitoo/financelib.git
 $ cd financelib
 $ pip install -e .
 
