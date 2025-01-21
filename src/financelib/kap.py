@@ -3,7 +3,6 @@ import time, os
 import random
 import requests
 
-from financelib.settings import driver
 from financelib.utils import today
 class KAP:
   """
