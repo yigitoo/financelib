@@ -8,6 +8,8 @@ from typing import List, Dict
 import time, os
 
 from financelib.settings import (
+  NEWS_API_APIKEY,
+  news_api_setup,
   NEWS_TITLE_CHAR_LIMIT,
   NEWS_CONTENT_CHAR_LIMIT
 )
@@ -157,6 +159,20 @@ class BloombergQuery(BaseQueryClass):
             'DNT': '1'
         }
 
+    def print_article_details(self, article: News) -> None:
+        print()
+        print("-----------------------------------")
+        print("Title:", article.title)
+        print("-----------------------------------")
+        print(article.content)
+        print("-----------------------------------")
+        print("Category:", article.category)
+        print("Date of Upload:", article.date)
+        print("Author:", article.author)
+        print("-----------------------------------")
+        print()
+
+
     def search_articles(self, query: str, limit: int = 5, print_results: bool = False) -> List[News]:
         articles = []
         try:
@@ -271,6 +287,21 @@ class BloombergQuery(BaseQueryClass):
             return []
 
 class NewsAPIQuery(BaseQueryClass):
+  def print_article_details(self, article: News) -> None:
+        print()
+        print("-----------------------------------")
+        print("Title:", article['title'])
+        print("-----------------------------------")
+        print("Article Thumbnail:", article['urlToImage'])
+        print('---')
+        print(article['content'])
+        print("-----------------------------------")
+        print("Source:", article['source']['name'])
+        print("Date of Publish:", article['publishedAt'])
+        print("Article URL:", article['url'])
+        print("-----------------------------------")
+        print()
+
   def search_articles(self, query, sources_from_ids: str | List[str], limit: int = 5,
                       print_results: bool = False) -> List[News]:
 
@@ -284,18 +315,7 @@ class NewsAPIQuery(BaseQueryClass):
 
     if print_results:
       for article in all_articles['articles']:
-        print("-----------------------------------")
-        print("Title:", article['title'])
-        print("-----------------------------------")
-        print("Article Thumbnail:", article['urlToImage'])
-        print('---')
-        print(article['content'])
-        print("-----------------------------------")
-        print("Source:", article['source']['name'])
-        print("Date of Publish:", article['publishedAt'])
-        print("Article URL:", article['url'])
-        print("-----------------------------------")
-        print()
+       self.print_article_details(article)
 
     return all_articles['articles']
   def get_all_news_source_ids(self) -> List[str]:

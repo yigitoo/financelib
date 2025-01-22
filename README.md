@@ -65,7 +65,7 @@ all_stocks = Stock.get_all_stocks()
 The library provides beautiful colored output in the terminal:
 
 ```python
-Stock.display_stock_info("THYAO.IS")
+Stock.get_live_stock_state("THYAO.IS")
 ```
 
 Output example:

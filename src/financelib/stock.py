@@ -17,8 +17,13 @@ logger = logging.getLogger(__name__)
 
 
 class Stock:
+    def __init__(self, symbol: str):
+        """Initialize stock with symbol"""
+        self.symbol = symbol.upper()
+        self._ticker = yf.Ticker(symbol)
+
     # Common BIST stocks for quick access
-    COMMON_STOCKS = {
+    COMMON_STOCKS: Dict[str, str] = {
         'THYAO': 'Türk Hava Yolları',
         'GARAN': 'Garanti BBVA',
         'ASELS': 'ASELSAN',
@@ -38,15 +43,15 @@ class Stock:
 
 
     @classmethod
-    def search_stocks(cls, query_list: List[str], return_info: bool = False) -> Optional[List[Dict[str, Any]]]:
+    def display_stock_infos(cls, query_list: List[str], return_info: bool = False) -> Optional[List[Dict[str, Any]]]:
         try:
             info = []
             for query in query_list:
                 if return_info:
-                    temp = cls.search_stock(query, return_info=return_info)
+                    temp = cls.display_stock_info(query, return_info=return_info)
                     info.append(temp)
                 else:
-                    cls.search_stock(query)
+                    cls.display_stock_info(query)
 
             if return_info:
                 return info
@@ -54,7 +59,7 @@ class Stock:
             return {"error": str(e), "info": e.with_traceback()}
 
     @classmethod
-    def search_stock(cls, company_name: str, return_info: bool = False) -> List[Dict[str, Any]]:
+    def display_stock_info(cls, company_name: str, return_info: bool = False) -> List[Dict[str, Any]]:
         try:
             info = []
             # Search for the company by name
@@ -90,8 +95,77 @@ class Stock:
             __import__('pprint').pprint(info)
         except Exception as e:
             return {"error": str(e), "info": e.with_traceback()}
+
+
     @classmethod
-    def display_stock_info(cls, company_name: str) -> Dict[str, Any]:
+    def get_live_stock_state(cls, symbol: str) -> None:
+        """
+        symbol: str
+
+        Display formatted stock information
+        But you must set the stock code suitable with
+        Yahoo Finance Stock Code
+        I mean you must set 'THYAO' (Turkish Airlines) instead of 'THYAO.IS'
+        """
+        stock = cls(symbol)
+        data = stock._get_stock()
+
+        if data:
+            change_symbol = '▲' if data['change'] > 0 else '▼' if data['change'] < 0 else '■'
+            change_color = '\033[92m' if data['change'] > 0 else '\033[91m' if data['change'] < 0 else '\033[0m'
+
+            print(f"\n{data['symbol']} - {data['timestamp']}")
+            print(f"Price: {data['price']} {data['currency']}")
+            print(f"Change: {change_color}{change_symbol} {data['change']} ({data['change_percent']}%)\033[0m")
+            print(f"Volume: {data['volume']:,}")
+        else:
+            print(f"\nUnable to fetch data for {symbol}")
+
+    def _get_stock(self) -> Optional[Dict[str, Any]]:
+        """Get current price and basic info"""
+        try:
+            df = self._ticker.history(period='1d')
+            if df.empty:
+                return None
+
+            last_price = df['Close'].iloc[-1]
+            open_price = df['Open'].iloc[0]
+            change = last_price - open_price
+            change_percent = (change / open_price) * 100
+
+            return {
+                'symbol': self.symbol,
+                'price': round(last_price, 2),
+                'change': round(change, 2),
+                'change_percent': round(change_percent, 2),
+                'currency': 'TRY',
+                'volume': int(df['Volume'].iloc[-1]),
+                'timestamp': datetime.now().strftime('%H:%M:%S')
+            }
+
+        except Exception as e:
+            logger.error(f"Error fetching price data for {self.symbol}: {e}")
+            return None
+
+    @classmethod
+    def display_stock_info(cls, symbol: str) -> None:
+        """Display formatted stock information"""
+        stock = cls(symbol)
+        data = stock.get_price_data()
+
+        if data:
+            change_symbol = '▲' if data['change'] > 0 else '▼' if data['change'] < 0 else '■'
+            change_color = '\033[92m' if data['change'] > 0 else '\033[91m' if data['change'] < 0 else '\033[0m'
+
+            print(f"\n{data['symbol']} - {data['timestamp']}")
+            print(f"Price: {data['price']} {data['currency']}")
+            print(f"Change: {change_color}{change_symbol} {data['change']} ({data['change_percent']}%)\033[0m")
+            print(f"Volume: {data['volume']:,}")
+        else:
+            print(f"\nUnable to fetch data for {symbol}")
+
+    @classmethod
+    def search_stock(cls, company_name: str) -> Dict[str, Any]:
         try:
             # Search for the company by name
             search_result = yahoo_search_stock(company_name)
@@ -105,7 +179,6 @@ class Stock:
             symbol = first_match.get("symbol")
 
             # Fetch detailed stock information using yfinance
-            import yfinance as yf
             stock = yf.Ticker(symbol)
             stock_info = stock.info
 
