@@ -1,10 +1,14 @@
 """
 Simple finance library for stock market data
 """
-import yfinance as yf
+import investpy
+import numpy as np
+
 from typing import Dict, Any, Optional, List
 import logging
 from datetime import datetime
+
+from financelib.utils import yesterday_str_slash_dmy
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR)
@@ -31,14 +35,9 @@ class Stock:
         'FROTO': 'Ford Otosan',
     }
 
-    FINVIZ_URL = "https://finviz.com/quote.ashx"
-    CACHE_TIMEOUT = 3600  # 1 hour cache
-    _stock_cache = {'timestamp': 0, 'data': {}}
-
     def __init__(self, symbol: str):
         """Initialize stock with symbol"""
         self.symbol = symbol.upper()
-        self._ticker = yf.Ticker(symbol)
 
     @classmethod
     def search_stocks(cls, query: str, return_data: bool = False) -> None:
@@ -57,11 +56,18 @@ class Stock:
             else:
                 print(result)
 
-
-
     @classmethod
-    def get_all_stocks(cls) -> Dict[str, str]:
+    def get_all_stocks(cls, country_name: str = 'turkey') -> Dict[str, str]:
         """Get all predefined BIST stocks"""
+        try:
+            # Get all stock data for the specified country
+            stocks = investpy.stocks.get_stocks(country=country_name.lower())
+
+            # Display the stocks
+            for _, stock in stocks.iterrows():
+                stocks.full_name
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
         return cls.COMMON_STOCKS
 
@@ -107,10 +113,10 @@ class Stock:
             logger.error(f"Search failed: {e}")
             return [{'error': 'Search failed. Please try again later.'}]
 
-    def get_price_data(self) -> Optional[Dict[str, Any]]:
+    def get_price_data(self, compare_from: str | datetime.date = yesterday_str_slash_dmy) -> Optional[Dict[str, Any]]:
         """Get current price and basic info"""
         try:
-            df = self._ticker.history(period='1d')
+            df = investpy.get_stock_historical_data(stock=self.symbol, country='turkey', from_date=compare_from, to_date=datetime.now().strftime('%d/%m/%Y'))
             if df.empty:
                 return None
 
@@ -126,7 +132,7 @@ class Stock:
                 'change_percent': round(change_percent, 2),
                 'currency': 'TRY',
                 'volume': int(df['Volume'].iloc[-1]),
-                'timestamp': datetime.now().strftime('%H:%M:%S')
+                'timestamp': datetime.datetime.now().strftime('%H:%M:%S')
             }
 
         except Exception as e:

@@ -101,6 +101,7 @@ python -m unittest tests.test_stock
 - Dependencies:
   - yfinance>=0.2.36
   - pandas>=1.5.0
+  - numpy
   - requests>=2.31.0
   - beautifulsoup4>=4.12.0
   - newsapi-python

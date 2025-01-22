@@ -1,7 +1,7 @@
 import sqlite3 as db
 import os
 
-from financelib.utils import today_underline
+from financelib.utils import today_str_underline
 from financelib.settings import LIBRARY_NAME
 from financelib.databases.modals import NewsModel
 
@@ -14,7 +14,7 @@ from financelib.databases.settings import (
 
 class SQLite:
     def __init__(self, db_name):
-        self.filename = f'{LIBRARY_NAME}_{db_name}_{today_underline()}.db'
+        self.filename = f'{LIBRARY_NAME}_{db_name}_{today_str_underline()}.db'
         self.db_name = db_name
         if not os.path.exists(self.filename):
           with open(self.filename, 'w+') as f:
