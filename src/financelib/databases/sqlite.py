@@ -3,13 +3,15 @@ import os
 
 from financelib.utils import today_str_underline
 from financelib.settings import LIBRARY_NAME
-from financelib.databases.modals import NewsModel
+from financelib.databases.modals import (
+  NewsModel,
+  StockDataModel
+)
 
 from financelib.databases.settings import (
-    DB_NEWS_TABLE_NAME,
     check_table_exist,
-    create_table_query,
-    make_insert_query
+    make_insert_article_query,
+    make_insert_stock_data_query,
 )
 
 class SQLite:
@@ -23,13 +25,19 @@ class SQLite:
         self.cursor = self.conn.cursor()
 
     def insert_article(self, news: NewsModel) -> None:
-        query = make_insert_query(news)
+        query = make_insert_article_query(news)
         self.cursor.execute(query)
         self.conn.commit()
 
     def insert_articles(self, news_list: list[NewsModel]) -> None:
         for news in news_list:
             self.insert_article(news)
+        self.conn.commit()
+
+
+    def insert_stock_data(self, stock_data: StockDataModel) -> None:
+        query = make_insert_stock_data_query(stock_data)
+        self.cursor.execute(query)
         self.conn.commit()
 
     def check_table(self, table_name):
