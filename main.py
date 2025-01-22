@@ -9,13 +9,10 @@ def main() -> None:
 
     # Arama örnekleri
 
-    sasa_polyester = Stock.search_stocks("Sasa polyester", return_data=True)
+    sasa_polyester = Stock.search_stocks("Sasa polyester", return_info=True)
     print(sasa_polyester)
 
     print("\nDetailed stock information:")
     for symbol in stocks:
         Stock.display_stock_info(symbol)
 
-
-if __name__ == '__main__':
-    main()

@@ -1,14 +1,15 @@
 """
 Simple finance library for stock market data
 """
-import investpy
+import yfinance as yf
+from yahooquery import search as yahoo_search_stock
+
 import numpy as np
+import pandas as pd
 
 from typing import Dict, Any, Optional, List
 import logging
 from datetime import datetime
-
-from financelib.utils import yesterday_str_slash_dmy
 
 # Configure logging
 logging.basicConfig(level=logging.ERROR)
@@ -35,123 +36,87 @@ class Stock:
         'FROTO': 'Ford Otosan',
     }
 
-    def __init__(self, symbol: str = ""):
-        """Initialize stock with symbol"""
-        self.symbol = symbol.upper()
 
     @classmethod
-    def search_stocks(cls, query: str, return_data: bool = False) -> None:
-        """Search for stocks"""
-        results = cls.search_symbol(query)
-
-        # If return_data is True, return the results
-        # Else print the results
-        if return_data:
-            return results
-
-        print(f"\nSearch results for '{query}':")
-        for result in results:
-            if 'error' in result:
-                print(f"Error: {result['error']}")
-            else:
-                print(result)
-
-    @classmethod
-    def get_all_stocks(cls, country_name: str = 'turkey') -> Dict[str, str]:
-        """Get all predefined BIST stocks"""
+    def search_stocks(cls, query_list: List[str], return_info: bool = False) -> Optional[List[Dict[str, Any]]]:
         try:
-            # Get all stock data for the specified country
-            stocks = investpy.stocks.get_stocks(country=country_name.lower())
+            info = []
+            for query in query_list:
+                if return_info:
+                    temp = cls.search_stock(query, return_info=return_info)
+                    info.append(temp)
+                else:
+                    cls.search_stock(query)
 
-            # Display the stocks
-            for _, stock in stocks.iterrows():
-                stocks.full_name
+            if return_info:
+                return info
         except Exception as e:
-            print(f"An error occurred: {e}")
-
-        return cls.COMMON_STOCKS
+            return {"error": str(e), "info": e.with_traceback()}
 
     @classmethod
-    def search_symbol(cls, query: str) -> List[Dict[str, Any]]:
-        """
-        Search for stocks in BIST
-        Args:
-            query: Search term (company name or symbol)
-        Returns:
-            List of matching stocks with their details
-        """
+    def search_stock(cls, company_name: str, return_info: bool = False) -> List[Dict[str, Any]]:
         try:
-            query = query.upper().strip()
-            results = []
+            info = []
+            # Search for the company by name
+            search_result = yahoo_search_stock(company_name)
 
-            # Search in predefined stocks
-            for symbol, name in cls.COMMON_STOCKS.items():
-                if query in symbol or query.upper() in name.upper():
-                    stock_info = {
-                        'symbol': f'{symbol}.IS',
-                        'name': name,
-                        'exchange': 'BIST',
-                        'type': 'Equity'
-                    }
+            # Check if there are any results
+            if not search_result or 'quotes' not in search_result or len(search_result['quotes']) == 0:
+                return {"error": "No matching company found"}
 
-                    # Try to get current price
-                    try:
-                        price_data = cls(f'{symbol}.IS').get_price_data()
-                        if price_data:
-                            stock_info.update({
-                                'price': price_data['price'],
-                                'currency': price_data['currency']
-                            })
-                    except Exception:
-                        pass
+            # Get the first result (assuming it's the best match)
+            if search_result is not None:
+                for quote in search_result['quotes']:
+                    stock = yf.Ticker(quote.get("symbol"))
+                    print(stock)
+                    stock_info = stock.info
 
-                    results.append(stock_info)
+                    # Extract and return relevant information
+                    info.append({
+                        "symbol": stock_info.get("symbol"),
+                        "short_name": stock_info.get("shortName"),
+                        "long_name": stock_info.get("longName"),
+                        "score": quote.get("score"),
+                        "exchange": quote.get("exchange"),
+                        "current_price": stock_info.get("currentPrice"),
+                        "market_cap": stock_info.get("marketCap"),
+                        "sector": stock_info.get("sector"),
+                        "industry": stock_info.get("industry"),
+                    })
 
-            return results if results else [{'error': f"No matching stocks found for '{query}'"}]
+            if return_info:
+                return info
 
+            __import__('pprint').pprint(info)
         except Exception as e:
-            logger.error(f"Search failed: {e}")
-            return [{'error': 'Search failed. Please try again later.'}]
-
-    def get_price_data(self, compare_from: str | datetime.date = yesterday_str_slash_dmy) -> Optional[Dict[str, Any]]:
-        """Get current price and basic info"""
+            return {"error": str(e), "info": e.with_traceback()}
+    @classmethod
+    def display_stock_info(cls, company_name: str) -> Dict[str, Any]:
         try:
-            df = investpy.get_stock_historical_data(stock=self.symbol, country='turkey', from_date=compare_from, to_date=datetime.now().strftime('%d/%m/%Y'))
-            if df.empty:
-                return None
+            # Search for the company by name
+            search_result = yahoo_search_stock(company_name)
 
-            last_price = df['Close'].iloc[-1]
-            open_price = df['Open'].iloc[0]
-            change = last_price - open_price
-            change_percent = (change / open_price) * 100
+            # Check if there are any results
+            if not search_result or 'quotes' not in search_result or len(search_result['quotes']) == 0:
+                return {"error": "No matching company found"}
 
+            # Get the first result (assuming it's the best match)
+            first_match = search_result['quotes'][0]
+            symbol = first_match.get("symbol")
+
+            # Fetch detailed stock information using yfinance
+            import yfinance as yf
+            stock = yf.Ticker(symbol)
+            stock_info = stock.info
+
+            # Extract and return relevant information
             return {
-                'symbol': self.symbol,
-                'price': round(last_price, 2),
-                'change': round(change, 2),
-                'change_percent': round(change_percent, 2),
-                'currency': 'TRY',
-                'volume': int(df['Volume'].iloc[-1]),
-                'timestamp': datetime.datetime.now().strftime('%H:%M:%S')
+                "symbol": stock_info.get("symbol"),
+                "short_name": stock_info.get("shortName"),
+                "current_price": stock_info.get("currentPrice"),
+                "market_cap": stock_info.get("marketCap"),
+                "sector": stock_info.get("sector"),
+                "industry": stock_info.get("industry"),
             }
-
         except Exception as e:
-            logger.error(f"Error fetching price data for {self.symbol}: {e}")
-            return None
-
-    @classmethod
-    def display_stock_info(cls, symbol: str) -> None:
-        """Display formatted stock information"""
-        stock = cls(symbol)
-        data = stock.get_price_data()
-
-        if data:
-            change_symbol = '▲' if data['change'] > 0 else '▼' if data['change'] < 0 else '■'
-            change_color = '\033[92m' if data['change'] > 0 else '\033[91m' if data['change'] < 0 else '\033[0m'
-
-            print(f"\n{data['symbol']} - {data['timestamp']}")
-            print(f"Price: {data['price']} {data['currency']}")
-            print(f"Change: {change_color}{change_symbol} {data['change']} ({data['change_percent']}%)\033[0m")
-            print(f"Volume: {data['volume']:,}")
-        else:
-            print(f"\nUnable to fetch data for {symbol}")
+            return {"error": str(e)}
