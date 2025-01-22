@@ -35,7 +35,7 @@ class Stock:
         'FROTO': 'Ford Otosan',
     }
 
-    def __init__(self, symbol: str):
+    def __init__(self, symbol: str = ""):
         """Initialize stock with symbol"""
         self.symbol = symbol.upper()
 
