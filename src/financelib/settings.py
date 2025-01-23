@@ -23,13 +23,12 @@ def get_webdriver_chrome():
   global chrome_options
   return webdriver.Chrome(options=chrome_options)
 
+NEWS_API_APIKEY = os.getenv('NEWS_API_APIKEY')
 
-NEWS_API_APIKEY = None
-
-def news_api_setup(api_key: str = None, api_key_from_dotenv: bool = True, dotenv_path: str = "") -> None:
+def news_api_setup(api_key: str = None, api_key_from_dotenv: bool = True, dotenv_path: str = "") -> str:
   global NEWS_API_APIKEY
 
-  if not api_key and api_key_from_dotenv:
+  if api_key == '' and api_key_from_dotenv:
 
     if dotenv_path == "":
       dotenv.load_dotenv()
@@ -41,9 +40,8 @@ def news_api_setup(api_key: str = None, api_key_from_dotenv: bool = True, dotenv
   else:
     NEWS_API_APIKEY = api_key
 
-# This settings is for my pc. Please set this for your own pc.
-if __name__ == "__main__":
-  news_api_setup(api_key_from_dotenv=True, dotenv_path='.env.local')
+  return NEWS_API_APIKEY
+
 
 def change_news_api_key(api_key: str):
   global NEWS_API_APIKEY

@@ -287,6 +287,12 @@ class BloombergQuery(BaseQueryClass):
             return []
 
 class NewsAPIQuery(BaseQueryClass):
+
+  def __init__(self, api_key: str = ''):
+    global NEWS_API_APIKEY
+    _api_key: str  = news_api_setup(api_key)
+    self.newsapi: NewsApiClient = NewsApiClient(api_key=_api_key)
+
   def print_article_details(self, article: News) -> None:
         print()
         print("-----------------------------------")
@@ -304,7 +310,7 @@ class NewsAPIQuery(BaseQueryClass):
 
   def search_articles(self, query, sources_from_ids: str | List[str], limit: int = 5,
                       print_results: bool = False) -> List[News]:
-
+    sources = ''
     if sources_from_ids is not None and type(sources_from_ids) is list:
        sources=','.join(sources_from_ids)
 
@@ -322,7 +328,7 @@ class NewsAPIQuery(BaseQueryClass):
     sources = self.newsapi.get_sources()
     return [source['id'] for source in sources['sources']]
 
-  def get_all_news_sources_datailed(self) -> List[Dict[str, str]]:
+  def get_all_news_sources_detailed(self) -> List[Dict[str, str]]:
     sources = self.newsapi.get_sources()
     return sources['sources']
 
