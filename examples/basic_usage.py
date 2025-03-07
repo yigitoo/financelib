@@ -2,7 +2,7 @@ from financelib import Stock
 
 def main():
     # Search for a stock
-    results = Stock.search_stocks("THYAO", return_data=True)
+    results = Stock.search_stock("THYAO", return_data=True)
     print("Search results:", results)
 
     # Display stock information

@@ -2,19 +2,15 @@
 Simple finance library for stock market data
 """
 import yfinance as yf
-from yahooquery import search as yahoo_search_stock
+import yahooquery as yq
 
 import numpy as np
 import pandas as pd
 
 from typing import Dict, Any, Optional, List
-import logging
 from datetime import datetime
 
-# Configure logging
-logging.basicConfig(level=logging.ERROR)
-logger = logging.getLogger(__name__)
-
+from financelib.settings import logger
 
 class Stock:
     def __init__(self, symbol: str):
@@ -41,6 +37,17 @@ class Stock:
         'FROTO': 'Ford Otosan',
     }
 
+    def get_data(self):
+        """Get current price score"""
+        if self.symbol in ['', None]:
+            raise ValueError({"error": "No stock symbol provided"})
+
+        data: dict = yq.search(self.symbol)
+        if data is None:
+            raise ValueError({"error": "No matching company found"})
+
+        quote = data['quotes'][0]
+        return quote
 
     @classmethod
     def display_stock_infos(cls, query_list: List[str], return_info: bool = False) -> Optional[List[Dict[str, Any]]]:
@@ -63,7 +70,7 @@ class Stock:
         try:
             info = []
             # Search for the company by name
-            search_result = yahoo_search_stock(company_name)
+            search_result = yq.search(company_name)
 
             # Check if there are any results
             if not search_result or 'quotes' not in search_result or len(search_result['quotes']) == 0:
@@ -168,28 +175,15 @@ class Stock:
     def search_stock(cls, company_name: str) -> Dict[str, Any]:
         try:
             # Search for the company by name
-            search_result = yahoo_search_stock(company_name)
+            search_result = yq.search(company_name)
 
             # Check if there are any results
             if not search_result or 'quotes' not in search_result or len(search_result['quotes']) == 0:
                 return {"error": "No matching company found"}
 
             # Get the first result (assuming it's the best match)
-            first_match = search_result['quotes'][0]
-            symbol = first_match.get("symbol")
+            first_match = search_result.get('quotes')[0]
+            return first_match
 
-            # Fetch detailed stock information using yfinance
-            stock = yf.Ticker(symbol)
-            stock_info = stock.info
-
-            # Extract and return relevant information
-            return {
-                "symbol": stock_info.get("symbol"),
-                "short_name": stock_info.get("shortName"),
-                "current_price": stock_info.get("currentPrice"),
-                "market_cap": stock_info.get("marketCap"),
-                "sector": stock_info.get("sector"),
-                "industry": stock_info.get("industry"),
-            }
         except Exception as e:
             return {"error": str(e)}

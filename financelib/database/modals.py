@@ -6,4 +6,4 @@
 """
 
 from financelib.news import News as NewsModel
-from financelib.stock import Stock as StockDataModel
+from financelib.stock.stock import Stock as StockDataModel

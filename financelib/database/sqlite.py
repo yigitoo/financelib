@@ -3,12 +3,12 @@ import os
 
 from financelib.utils import today_str_underline
 from financelib.settings import LIBRARY_NAME
-from financelib.databases.modals import (
+from financelib.database.modals import (
   NewsModel,
   StockDataModel
 )
 
-from financelib.databases.settings import (
+from financelib.database.settings import (
     check_table_exist,
     make_insert_article_query,
     make_insert_stock_data_query,

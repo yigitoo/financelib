@@ -40,7 +40,7 @@ $ export NEWS_API_APIKEY="your-api-key"
 from financelib import Stock
 
 # Search for a stock
-results = Stock.search_stocks("THYAO", return_data=True)
+results = Stock.search_stock("THYAO", return_data=True)
 print(results)
 
 # Display stock information with colors
@@ -51,10 +51,10 @@ Stock.display_stock_info("THYAO.IS")
 
 ```python
 # Search by company name
-Stock.search_stocks("Garanti")
+Stock.search_stock("Garanti")
 
 # Search by symbol
-Stock.search_stocks("SASA")
+Stock.search_stock("SASA")
 
 # Get all available stocks
 all_stocks = Stock.get_all_stocks()

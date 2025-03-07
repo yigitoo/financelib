@@ -10,6 +10,6 @@ def available_databases() -> list:
     Returns available databases in the module
     """
     return ['sqlite']
+
     # high priority databases: mysql and mongodb
     # may be added in the future
-    #'postgresql', 'oracle', 'mssql', 'cassandra', 'redis', 'firebird', 'neo4j', 'spark', 'elasticsearch']

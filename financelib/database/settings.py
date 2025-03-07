@@ -7,7 +7,7 @@
 """
 import sqlite3
 
-from financelib.databases.modals import (
+from financelib.database.modals import (
   NewsModel,
   StockDataModel
 )

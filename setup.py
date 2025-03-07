@@ -6,8 +6,8 @@ setup(
     description="Simple finance library for stock market data",
     author="Your Name",
     author_email="your.email@example.com",
-    packages=find_packages(where="src"),
-    package_dir={"": "src"},
+    packages=find_packages(where="financelib"),
+    package_dir={"": "financelib"},
     install_requires=[
         "yfinance>=0.2.36",
         "pandas>=1.5.0",

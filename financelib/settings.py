@@ -4,6 +4,11 @@
 @author: Yiğit GÜMÜŞ
 @date: 2025-01-22 01:39:31
 """
+# Configure logging
+import logging
+logging.basicConfig(level=logging.ERROR)
+logger = logging.getLogger(__name__)
+
 LIBRARY_NAME = "financelib"
 
 # CONSTANTS

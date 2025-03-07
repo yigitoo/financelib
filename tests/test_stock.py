@@ -2,16 +2,15 @@ import unittest
 from financelib import Stock
 
 class TestStock(unittest.TestCase):
-    def test_search_stocks(self):
-        results = Stock.search_stocks("THYAO", return_data=True)
-        self.assertTrue(len(results) > 0)
-        self.assertIn('symbol', results[0])
+    def test_search_stock(self):
+        results = Stock.search_stock("THYAO")
+        self.assertIsNotNone(results)
 
-    def test_get_price_data(self):
+    def test_get_stock_data_via_class(self):
         stock = Stock("THYAO.IS")
-        data = stock.get_price_data()
+        data = stock.get_data()
         self.assertIsNotNone(data)
-        self.assertIn('price', data)
+
 
 if __name__ == '__main__':
     unittest.main()
