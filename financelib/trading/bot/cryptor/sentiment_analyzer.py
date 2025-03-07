@@ -5,7 +5,6 @@ import logging
 from collections import defaultdict
 import numpy as np
 from datetime import datetime
-
 from settings import FINE_TUNED_MODEL_PATH
 import os
 

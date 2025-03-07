@@ -4,7 +4,6 @@ import numpy as np
 import time
 import logging
 
-
 from .data_fetcher import DataFetcher
 from .sentiment_analyzer import SentimentAnalyzer
 from .price_predictor import PricePredictor
