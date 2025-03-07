@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from typing import List, Dict
 import time, os
 
-from financelib.settings import (
+from settings import (
   NEWS_API_APIKEY,
   news_api_setup,
   NEWS_TITLE_CHAR_LIMIT,

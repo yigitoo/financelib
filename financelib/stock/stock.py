@@ -10,7 +10,7 @@ import pandas as pd
 from typing import Dict, Any, Optional, List
 from datetime import datetime
 
-from financelib.settings import logger
+from settings import logger
 
 class Stock:
     def __init__(self, symbol: str):

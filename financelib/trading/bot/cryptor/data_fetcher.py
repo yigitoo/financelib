@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 
-from financelib.settings import (
+from settings import (
     BINANCE_API_KEY,
     BINANCE_API_SECRET,
     TWITTER_API_KEY,

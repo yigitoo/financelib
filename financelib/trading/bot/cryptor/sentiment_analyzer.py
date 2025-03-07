@@ -5,7 +5,8 @@ import logging
 from collections import defaultdict
 import numpy as np
 from datetime import datetime
-from config import FINE_TUNED_MODEL_PATH
+
+from settings import FINE_TUNED_MODEL_PATH
 import os
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')

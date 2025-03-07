@@ -5,7 +5,7 @@ import logging
 from datetime import datetime
 import time
 
-from financelib.settings import BOT_SERVER_HOST, BOT_SERVER_PORT
+from settings import BOT_SERVER_HOST, BOT_SERVER_PORT
 
 app = Flask(__name__)
 bot = CryptorTradeBot()

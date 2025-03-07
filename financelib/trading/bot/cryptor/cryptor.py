@@ -9,7 +9,7 @@ from .data_fetcher import DataFetcher
 from .sentiment_analyzer import SentimentAnalyzer
 from .price_predictor import PricePredictor
 
-from financelib.settings import (
+from settings import (
     BINANCE_API_KEY,
     BINANCE_API_SECRET,
     TRADE_AMOUNT

@@ -1,14 +1,14 @@
 import sqlite3 as db
 import os
 
-from financelib.utils import today_str_underline
-from financelib.settings import LIBRARY_NAME
-from financelib.database.modals import (
+from utils import today_str_underline
+from settings import LIBRARY_NAME
+from database.modals import (
   NewsModel,
   StockDataModel
 )
 
-from financelib.database.settings import (
+from database.settings import (
     check_table_exist,
     make_insert_article_query,
     make_insert_stock_data_query,
