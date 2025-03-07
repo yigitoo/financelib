@@ -1,7 +1,10 @@
-yfinance>=0.2.36
-pandas>=1.5.0
-requests>=2.31.0
-beautifulsoup4>=4.12.0
+yfinance
+numpy
+pandas
+requests
+beautifulsoup4
 newsapi-python
 python-dotenv
 SQLAlchemy
+
+-r ./requirements-bot.txt

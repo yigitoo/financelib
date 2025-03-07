@@ -1,0 +1,5 @@
+ccxt[bot]
+torch[bot]
+transformers[bot]
+flask[bot]
+scikit-learn[bot]

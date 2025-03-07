@@ -6,18 +6,37 @@
 """
 # Configure logging
 import logging
+
 logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 LIBRARY_NAME = "financelib"
 
+import dotenv, os
+
 # CONSTANTS
 NEWS_TITLE_CHAR_LIMIT = 10
 NEWS_CONTENT_CHAR_LIMIT = 150
 
+TRADE_AMOUNT = 0.001
+TIMEFRAME = '1h'
+
+BOT_SERVER_HOST = '0.0.0.0'
+BOT_SERVER_PORT = 5000
+
+# API KEYS
+NEWS_API_APIKEY = os.getenv('NEWS_API_APIKEY')
+
+BINANCE_API_KEY = os.getenv('BINANCE_API_KEY')
+BINANCE_API_SECRET = os.getenv('BINANCE_API_SECRET')
+
+TWITTER_API_KEY = os.getenv('TWITTTER_API_KEY')
+TWITTER_API_SECRET = os.getenv('TWITTTER_API_SECRET')
+TWITTER_ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
+TWITTER_ACCESS_TOKEN_SECRET = os.getenv('TWITTTER_ACCESS_TOKEN_SECRET')
+
 
 from selenium import webdriver
-import dotenv, os
 
 chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument('--headless')
@@ -27,8 +46,6 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 def get_webdriver_chrome():
   global chrome_options
   return webdriver.Chrome(options=chrome_options)
-
-NEWS_API_APIKEY = os.getenv('NEWS_API_APIKEY')
 
 def news_api_setup(api_key: str = None, api_key_from_dotenv: bool = True, dotenv_path: str = "") -> str:
   global NEWS_API_APIKEY
