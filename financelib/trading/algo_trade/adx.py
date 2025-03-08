@@ -1,7 +1,7 @@
 import pandas as pd
 
 def adx(high, low, close, period=14):
-  """Calculate Average Directional Index."""
+  """Calculate Average Directional Index. (ADX)"""
 
   plus_dm = high.diff()
   minus_dm = low.diff()

@@ -11,7 +11,7 @@ from .price_predictor import PricePredictor
 from settings import (
     BINANCE_API_KEY,
     BINANCE_API_SECRET,
-    TRADE_AMOUNT
+    CRYPTO_TRADE_AMOUNT
 )
 
 logging.basicConfig(
@@ -36,7 +36,7 @@ class CryptorTradeBot:
         self.data_fetcher = DataFetcher()
         self.sentiment_analyzer = SentimentAnalyzer()
         self.price_predictor = PricePredictor()
-        self.amount = TRADE_AMOUNT
+        self.amount = CRYPTO_TRADE_AMOUNT
         self.positions = {}
         self.trades = {}
 

@@ -1,9 +1,20 @@
+# -*- coding: utf-8 -*-
+"""
+@title: sentiment_analyzer.py
+@author: Yiğit GÜMÜŞ
+@date: 2025-03-08 13:59:14
+@description: This file will be used for fundamental analysis
+via newspapers and articles about the Crypto (Coin or Market).
+"""
+
+
 import torch
 from torch.utils.data import Dataset, DataLoader
 from transformers import BertTokenizer, BertForSequenceClassification, AdamW
+import numpy as np
+
 import logging
 from collections import defaultdict
-import numpy as np
 from datetime import datetime
 from settings import FINE_TUNED_MODEL_PATH
 import os
@@ -142,6 +153,9 @@ if __name__ == '__main__':
     analyzer.fine_tune(texts, labels, epochs=3, batch_size=2)
 
     # Fine-tuned model ile sentiment analizi
+    #TODO: Implement here for realtime tweet and news fetching
+    #P.S To Myself: You can implement the newsapi that you wrote earlier.
+    #For News part.
     tweets = ["Bitcoin is amazing!", "BTC is crashing"]
     news = ["Bitcoin surges", "Market downturn"]
     score = analyzer.get_sentiment_score("bitcoin", tweets, news)

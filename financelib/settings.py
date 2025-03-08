@@ -14,21 +14,21 @@ LIBRARY_NAME = "financelib"
 
 import dotenv
 import os
-import datetime
 
+from .utils import today_str
 # CONSTANTS
 NEWS_TITLE_CHAR_LIMIT = 10
 NEWS_CONTENT_CHAR_LIMIT = 150
 
-TODAY = datetime.datetime.today()
-TODAY_STR = TODAY.strftime('%Y-%m-%d')
+
 
 # BOT CONSTANTS
 BOT_SERVER_HOST = '0.0.0.0'
 BOT_SERVER_PORT = 5000
-TRADE_AMOUNT = 0.001
+
+CRYPTO_TRADE_AMOUNT = 0.001
 TIMEFRAME = '1h'
-FINE_TUNED_MODEL_PATH = f'./finbert-sentiment-analysis-{TODAY_STR}'
+FINE_TUNED_MODEL_PATH = f'./finbert-sentiment-analysis-{today_str}'
 
 
 # API KEYS
